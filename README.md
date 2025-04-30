@@ -2,7 +2,7 @@
 - 👀 Soy estudiante de la carrera de Lic. en Ingenieria de Software en la Universidad Autonoma de Sinaloa Facultad de Ingenieria Mochis
 - 🌱 
 - 💞️
-- 📫 Contacto: elderob7@gmail.com 
+- 📫 Contacto: robertobetancourtsoto@gmail.com 
 - 😄 
 - ⚡ 
 
