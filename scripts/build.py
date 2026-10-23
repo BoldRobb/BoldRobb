@@ -105,167 +105,81 @@ def fonts():
     return FONTS
 
 
-# ── ASCII spacetime mesh ──────────────────────────────────────────────
+# ── ASCII black hole ──────────────────────────────────────────────────
 
 COLS, ROWS = 64, 22
 CELL_W, CELL_H = 6.9, 14.0
-FRAMES = 12
-MASSES = [  # (x, z, strength, label)
-    (0.05, 0.0, 1.5, "NEURONIX"),
-    (-0.62, -0.42, 0.55, "MACRONNECT"),
-    (0.58, -0.55, 0.65, "CHANSHOP"),
-    (-0.48, 0.55, 0.40, "TESIS"),
-    (0.62, 0.48, 0.32, "FISIOVISION"),
-    (-0.05, -0.85, 0.28, "DELFÍN"),
-]
+FRAMES = 24
+FRAME_S = 0.12
+RAMP = " .·:-=+*"
+TILT, SHADOW, DISK_IN, DISK_OUT, HALO = 0.3, 62.0, 84.0, 228.0, 1.18
 
 
-def height(x, z, phase):
-    y = 0.0
-    for mx, mz, m, _ in MASSES:
-        d2 = (x - mx) ** 2 + (z - mz) ** 2
-        y -= 0.55 * m / math.sqrt(1 + d2 / (0.035 * m))
-    cx, cz = MASSES[0][0], MASSES[0][1]
-    d = math.hypot(x - cx, z - cz)
-    y += 0.04 * math.sin(14 * d - phase) * math.exp(-1.6 * d)
-    return y
-
-
-YAW, PITCH, DIST, FOCAL, V_ANCHOR = math.radians(0), math.radians(30), 2.0, 300.0, 0.32
-EXTENT, LINES, RES, LINE_W = 1.8, 11, 360, 0.045
-RAMP = "   ..·:;="
-
-
-def project(x, y, z):
-    cy, sy = math.cos(YAW), math.sin(YAW)
-    x, z = x * cy - z * sy, x * sy + z * cy
-    cp, sp = math.cos(PITCH), math.sin(PITCH)
-    y, z = y * cp + z * sp, -y * sp + z * cp
-    z += DIST
-    px = COLS * CELL_W / 2 + FOCAL * x / z
-    py = ROWS * CELL_H * V_ANCHOR - FOCAL * y / z
-    return px, py, z
-
-
-def direction_char(dx, dy):
-    a = abs(math.degrees(math.atan2(dy, dx)))
-    if a > 90:
-        a = 180 - a
-        dx = -dx
-        dy = -dy
-    if a < 24:
-        return "-"
-    if a > 66:
-        return "|"
-    return "\\" if (dx > 0) == (dy > 0) else "/"
-
-
-def render_frame(phase):
-    """Samples the height field densely, keeps the nearest sample per cell, and draws grid lines
-    as direction glyphs over a sparse slope-shaded surface, the way VShelf's ascii-engine ramps materials."""
-    step = 2 * EXTENT / (LINES - 1)
-    h = 2 * EXTENT / RES
-    coord = [-EXTENT + i * h for i in range(RES + 1)]
-    hf = [[height(x, z, phase) for z in coord] for x in coord]
-    zmin = [[math.inf] * COLS for _ in range(ROWS)]
-    samples = []
-    for i, x in enumerate(coord):
-        for j, z in enumerate(coord):
-            px, py, depth = project(x, hf[i][j], z)
-            col, row = int(px / CELL_W), int(py / CELL_H)
-            if 0 <= col < COLS and 0 <= row < ROWS:
-                samples.append((row, col, depth, i, j))
-                zmin[row][col] = min(zmin[row][col], depth)
-    on_u = [[False] * COLS for _ in range(ROWS)]
-    on_v = [[False] * COLS for _ in range(ROWS)]
-    best = [[None] * COLS for _ in range(ROWS)]
-    for row, col, depth, i, j in samples:
-        if depth > zmin[row][col] + 0.06:
-            continue
-        gu, gv = (i * h) / step, (j * h) / step
-        on_u[row][col] |= abs(gu - round(gu)) < LINE_W
-        on_v[row][col] |= abs(gv - round(gv)) < LINE_W
-        if depth == zmin[row][col]:
-            best[row][col] = (i, j, depth)
-    char = [[" "] * COLS for _ in range(ROWS)]
-    level = [[0] * COLS for _ in range(ROWS)]
+def hole_frame(phase):
+    """A tilted accretion disk around a shadow, with the far side of the disk lensed into a halo above it."""
+    cx, cy = COLS * CELL_W / 2, ROWS * CELL_H / 2
+    cells = {}
     for r in range(ROWS):
         for c in range(COLS):
-            if not best[r][c]:
+            x, y = (c + 0.5) * CELL_W - cx, (r + 0.5) * CELL_H - cy
+            rho_s = math.hypot(x, y)
+            rho = math.hypot(x, y / TILT)
+            theta = math.atan2(y / TILT, x)
+            front, disk = y > 0, DISK_IN < rho < DISK_OUT
+            val = 0.0
+            if disk and (front or rho_s > SHADOW):
+                arms = 0.5 + 0.5 * math.sin(2 * theta - phase + rho * 0.05)
+                fall = (1 - (rho - DISK_IN) / (DISK_OUT - DISK_IN)) ** 0.6
+                doppler = 0.78 + 0.22 * math.cos(theta + math.pi)
+                val = min(1.0, 1.15 * fall * (0.5 + 0.5 * arms) * doppler)
+            ring = rho_s - SHADOW * HALO
+            if -6 < ring < 14 and not (front and disk):
+                halo = (1 - abs(ring - 2) / 12) * (0.75 + 0.25 * math.cos(math.atan2(y, x) + phase))
+                val = max(val, halo * (1.0 if y < 0 else 0.6))
+            if rho_s < SHADOW and not (front and disk):
                 continue
-            i, j, depth = best[r][c]
-            i2, j2 = min(i + 1, RES), min(j + 1, RES)
-            y = hf[i][j]
-            p0 = project(coord[i], y, coord[j])
-            heat = min(1.0, max(0.0, (-y - 0.2) / 0.6))
-            near = max(0.0, min(1.0, (DIST + 1.2 - depth) / 2.4))
-            if on_u[r][c] and on_v[r][c]:
-                ch = "+"
-            elif on_u[r][c]:
-                p1 = project(coord[i], hf[i][j2], coord[j2])
-                ch = direction_char(p1[0] - p0[0], p1[1] - p0[1])
-            elif on_v[r][c]:
-                p1 = project(coord[i2], hf[i2][j], coord[j])
-                ch = direction_char(p1[0] - p0[0], p1[1] - p0[1])
-            else:
-                ch = RAMP[min(len(RAMP) - 1, int(heat * len(RAMP)))]
-                level[r][c] = min(3, int((0.4 * near + 0.6 * heat) * 4))
-                char[r][c] = ch
+            if val < 0.1:
                 continue
-            char[r][c] = ch
-            level[r][c] = min(5, int((0.5 * near + 0.8 * heat) * 5.5))
-    marks = []
-    for i, (mx, mz, m, label) in enumerate(MASSES):
-        px, py, _ = project(mx, height(mx, mz, phase), mz)
-        col, row = int(px / CELL_W), int(py / CELL_H)
-        if 0 <= col < COLS and 0 <= row < ROWS:
-            char[row][col] = "@" if i == 0 else ("O" if m > 0.5 else "o")
-            level[row][col] = 6 if i == 0 else 5
-            marks.append((col, row, label))
-    return char, level, marks
+            ch = RAMP[min(len(RAMP) - 1, int(val * len(RAMP)))]
+            if ch != " ":
+                cells[(r, c)] = (ch, min(5, int(val * 6.2)))
+    return cells
 
 
-def frame_rows(char, level, x0, y0):
+def frame_rows(cells, x0, y0):
     rows = []
     for r in range(ROWS):
-        runs, cur, buf = [], None, []
-        for c in range(COLS):
-            ch, lv = char[r][c], level[r][c]
-            if ch == " ":
-                buf.append(" ")
-                continue
-            if cur is not None and lv != cur:
-                runs.append((cur, "".join(buf)))
-                buf = []
-            cur = lv
-            buf.append(ch)
-        text = "".join(buf).rstrip()
-        if cur is not None and text:
-            runs.append((cur, text))
-        if not runs:
-            continue
-        spans = "".join(f'<tspan class="l{lv}">{escape(t)}</tspan>' for lv, t in runs)
-        rows.append(f'<text x="{x0}" y="{y0 + r * CELL_H:.1f}" xml:space="preserve">{spans}</text>')
+        line = sorted((c, ch, lv) for (rr, c), (ch, lv) in cells.items() if rr == r)
+        spans, i = [], 0
+        while i < len(line):
+            c0, text, lv = line[i]
+            prev, i = c0, i + 1
+            while i < len(line) and line[i][2] == lv:
+                text += " " * (line[i][0] - prev - 1) + line[i][1]
+                prev, i = line[i][0], i + 1
+            spans.append(f'<tspan x="{x0 + c0 * CELL_W:.1f}" class="l{lv}">{escape(text)}</tspan>')
+        if spans:
+            rows.append(f'<text y="{y0 + r * CELL_H:.1f}" xml:space="preserve">{"".join(spans)}</text>')
     return "".join(rows)
 
 
 def ascii_scene(x0, y0, theme):
     frames, used = [], set()
     for f in range(FRAMES):
-        char, level, _ = render_frame(2 * math.pi * f / FRAMES)
-        used |= {(r, c) for r in range(ROWS) for c in range(COLS) if char[r][c] != " "}
-        frames.append(f'<g class="fr" style="animation-delay:{f * 0.28:.2f}s">{frame_rows(char, level, x0, y0)}</g>')
-    rng = random.Random(7)
+        cells = hole_frame(2 * math.pi * f / FRAMES)
+        used |= cells.keys()
+        frames.append(f'<g class="fr" style="animation-delay:{f * FRAME_S:.2f}s">{frame_rows(cells, x0, y0)}</g>')
+    rng = random.Random(9)
     stars = []
-    for _ in range(50):
+    for _ in range(110):
         r, c = rng.randrange(ROWS), rng.randrange(COLS)
         if (r, c) in used:
             continue
-        twinkle = ' class="tw"' if rng.random() < 0.25 else ""
+        twinkle = ' class="tw"' if rng.random() < 0.3 else ""
         stars.append(f'<text x="{x0 + c * CELL_W:.1f}" y="{y0 + r * CELL_H:.1f}"{twinkle} '
                      f'style="animation-delay:{rng.random() * 4:.2f}s">{rng.choice(".·")}</text>')
-    css = "".join(f".l{i}{{fill:{c}}}" for i, c in enumerate(theme["levels"])) + f".l6{{fill:{SIGNAL}}}"
-    period = FRAMES * 0.28
+    css = "".join(f".l{i}{{fill:{c}}}" for i, c in enumerate(theme["levels"]))
+    period = FRAMES * FRAME_S
     css += (f".fr{{opacity:0;animation:fr {period:.2f}s step-end infinite}}"
             f"@keyframes fr{{0%{{opacity:1}}{100 / FRAMES:.3f}%{{opacity:0}}100%{{opacity:0}}}}"
             f".tw{{animation:tw 4s ease-in-out infinite}}@keyframes tw{{0%,100%{{opacity:.25}}50%{{opacity:1}}}}")
