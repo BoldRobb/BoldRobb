@@ -1,21 +1,16 @@
-## Hola, soy Roberto Betancourt Soto 👋
+<div align="center">
 
-Desarrollador full stack de Los Mochis, Sinaloa. Estudiante de Ingeniería de Software en la Facultad de Ingeniería Mochis de la Universidad Autónoma de Sinaloa (UAS).
+<img src="assets/card.svg" width="100%" alt="Roberto Betancourt Soto. Ingeniero de software full stack en Neuronix, desde Los Mochis, Sinaloa. Construyo software real, del frontend al despliegue.">
 
-- 💼 Desarrollador full stack en **Neuronix** (Django/DRF, Next.js, TypeScript, Prisma, PostgreSQL). Antes, microservicios con Java Spring Boot y React en **MACRONNECT**.
-- 🌱 Me interesan la arquitectura de software, las herramientas que ahorran trabajo al desarrollador y la IA que corre en local.
-- 📫 Contacto: robertobetancourtsoto@gmail.com
+<a href="mailto:robertobetancourtsoto@gmail.com"><img src="assets/link-email.svg" height="44" alt="Email"></a>
+<a href="https://linkedin.com/in/boldrobb"><img src="assets/link-linkedin.svg" height="44" alt="LinkedIn"></a>
+<a href="https://x.com/BoldRobb"><img src="assets/link-x.svg" height="44" alt="X / Twitter"></a>
 
-### 🛠️ Tecnologías
+<img src="assets/stack.svg" width="100%" alt="Stack. Lenguajes: Java, Python, TypeScript, JavaScript, C++, C#. Backend: Spring Boot, FastAPI, Django, Node.js. Frontend y móvil: React, Next.js, Angular, Flutter. Datos: PostgreSQL, MySQL, Prisma, Redis, Kafka. DevOps y nube: Docker, Kubernetes, AWS, GitHub Actions, Git.">
 
-- **Lenguajes:** Java, Python, TypeScript, JavaScript, C++, C#
-- **Frameworks:** Spring Boot, FastAPI, Django, React, Next.js, React Native, Node.js
-- **Datos y mensajería:** PostgreSQL, MySQL, Prisma, Apache Kafka
-- **DevOps y nube:** Docker, Kubernetes, AWS (EC2, S3, RDS), CI/CD
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BoldRobb/BoldRobb/output/snake-dark.svg">
+  <img src="https://raw.githubusercontent.com/BoldRobb/BoldRobb/output/snake-light.svg" width="100%" alt="Mis contribuciones del último año">
+</picture>
 
-### 📌 Proyectos
-
-- [**CodeForge**](https://github.com/BoldRobb/CodeForge-releases): panel de escritorio para Windows que junta los issues de Linear, las ramas de git y los pull requests de GitHub, y arranca el trabajo de un issue con un agente de código.
-- [**AudibleCaps**](https://github.com/BoldRobb/AudibleCaps): subtítulos flotantes en vivo con traducción al español; captura el audio de un proceso, transcribe con faster-whisper y traduce con OPUS-MT, todo en local.
-- [**FisioVision**](https://github.com/BoldRobb/FisioVision): API de gestión de fisioterapia con análisis de pose corporal (MediaPipe) y recomendaciones con Prolog.
-- [**CSTV**](https://github.com/BoldRobb/CSTV): plataforma de noticias, rankings y foro de Counter-Strike con Spring Boot y [Angular](https://github.com/BoldRobb/CSTV-angular).
+</div>
