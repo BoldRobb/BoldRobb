@@ -1,12 +1,20 @@
 <div align="center">
 
-<img src="assets/card.svg" width="100%" alt="Roberto Betancourt Soto. Ingeniero de software full stack en Neuronix, desde Los Mochis, Sinaloa. Construyo software real, del frontend al despliegue.">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/card-dark.svg">
+  <img src="assets/card-light.svg" width="100%" alt="Roberto Betancourt Soto. Full stack developer en Neuronix, desde Los Mochis, Sinaloa. Construyo software real, del frontend al despliegue.">
+</picture>
 
-<a href="mailto:robertobetancourtsoto@gmail.com"><img src="assets/link-email.svg" height="44" alt="Email"></a>
-<a href="https://linkedin.com/in/boldrobb"><img src="assets/link-linkedin.svg" height="44" alt="LinkedIn"></a>
-<a href="https://x.com/BoldRobb"><img src="assets/link-x.svg" height="44" alt="X / Twitter"></a>
+<br><br>
 
-<img src="assets/stack.svg" width="100%" alt="Stack. Lenguajes: Java, Python, TypeScript, JavaScript, C++, C#. Backend: Spring Boot, FastAPI, Django, Node.js. Frontend y móvil: React, Next.js, Angular, Flutter. Datos: PostgreSQL, MySQL, Prisma, Redis, Kafka. DevOps y nube: Docker, Kubernetes, AWS, GitHub Actions, Git.">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/stack-dark.svg">
+  <img src="assets/stack-light.svg" width="80%" alt="Java, Python, TypeScript, JavaScript, C++, C#, Spring Boot, FastAPI, Django, Node.js, React, Next.js, Angular, Flutter, PostgreSQL, MySQL, Prisma, Redis, Kafka, Docker, Kubernetes, AWS, GitHub Actions, Git">
+</picture>
+
+<br><br>
+
+[email](mailto:robertobetancourtsoto@gmail.com) · [linkedin](https://linkedin.com/in/boldrobb) · [x](https://x.com/BoldRobb)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BoldRobb/BoldRobb/output/snake-dark.svg">
