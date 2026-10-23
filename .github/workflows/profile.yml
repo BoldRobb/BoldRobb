@@ -32,18 +32,3 @@ jobs:
           git add assets/*.svg
           git diff --cached --quiet || { git commit -m "Actualiza telemetria del perfil" && git push; }
 
-  serpiente:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: Platane/snk/svg-only@v3
-        with:
-          github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            dist/snake-dark.svg?color_snake=#fc3d21&color_dots=#0e1428,#1b2c55,#2d4a8a,#4c9bd2,#6fe3ff
-            dist/snake-light.svg?color_snake=#fc3d21&color_dots=#e6e9f2,#bfe9f7,#7fcdea,#3a6db0,#2d4a8a
-      - uses: crazy-max/ghaction-github-pages@v5
-        with:
-          target_branch: output
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

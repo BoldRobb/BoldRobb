@@ -16,9 +16,4 @@
 
 [email](mailto:robertobetancourtsoto@gmail.com) · [linkedin](https://linkedin.com/in/boldrobb) · [x](https://x.com/BoldRobb)
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/BoldRobb/BoldRobb/output/snake-dark.svg">
-  <img src="https://raw.githubusercontent.com/BoldRobb/BoldRobb/output/snake-light.svg" width="100%" alt="Mis contribuciones del último año">
-</picture>
-
 </div>
